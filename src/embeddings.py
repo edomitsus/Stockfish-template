@@ -5,6 +5,7 @@ Converts images into high-dimensional vector representations for similarity sear
 
 from sentence_transformers import SentenceTransformer
 from typing import List
+from PIL import Image
 
 
 class ImageEmbedder:
@@ -32,3 +33,21 @@ class ImageEmbedder:
             List of float values representing the image embedding
         """
         # TODO
+        # Load image
+        image = Image.open(image_path)
+        
+        # Generate embedding (returns numpy array)
+        embedding = self.model.encode(image, convert_to_numpy=True)
+        
+        # Convert to list of floats
+        return embedding.tolist()
+
+if __name__ == "__main__":
+    # Initialize embedder
+    embedder = ImageEmbedder(model_name='clip-ViT-B-32', dimension=512)
+    
+    image_path = "static/clownfish.jpeg"
+
+    embedding = embedder.get_image_embedding(image_path)
+    print(f"Embedding vector (dimension: {len(embedding)}):")
+    print(embedding)
